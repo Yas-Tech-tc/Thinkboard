@@ -6,20 +6,23 @@ import { connectDB } from "./config/db.js";
 
 import dotenv from "dotenv";
 
+import ratelimiter from "./middleware/rateLimiter.js";
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-connectDB();
+
+app.use(express.json());
+app.use(ratelimiter);
 
 app.use("/api/notes", notesRoutes);
 
-app.listen(PORT, () =>{
-    console.log("server started on port : 5001");
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log("Server started on PORT:", PORT);
+  });
 });
 
 
-// g2cjhkg7cAsuZnvj
-
-//mongodb+srv://<db_username>:g2cjhkg7cAsuZnvj@cluster0.pidgism.mongodb.net/?appName=Cluster0
